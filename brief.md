@@ -21,8 +21,8 @@ Leave a line empty to use the default. See README → "Change the narration lang
 
 - Voice ID: (empty = Alice, a free premade voice)
 - TTS model: (empty = eleven_multilingual_v2)
-- Transcript language code: (empty = auto-detect; e.g. en, es, vi, ja)
+- Transcript language code: (empty = auto-detect; e.g. en, es, fr, ja)
 
 ## Browser settings (screen capture)
 
-- Browser UI language: (empty = en-US; e.g. es-ES, vi-VN, ja-JP)
+- Browser UI language: (empty = en-US; e.g. es-ES, fr-FR, ja-JP)

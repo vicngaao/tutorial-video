@@ -9,7 +9,7 @@ Env:
   ELEVENLABS_STT_MODEL  optional, default scribe_v1
 
 Language (brief.md line wins, then env var, then auto-detect):
-  brief.md "Transcript language code" / ELEVENLABS_STT_LANG   ISO code, e.g. en, es, vi, ja
+  brief.md "Transcript language code" / ELEVENLABS_STT_LANG   ISO code, e.g. en, es, fr, ja
 """
 import json
 import mimetypes

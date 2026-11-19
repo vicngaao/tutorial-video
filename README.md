@@ -133,12 +133,12 @@ The script agent writes the narration in this language.
 | Model | Languages | Notes |
 |---|---|---|
 | `eleven_multilingual_v2` (default) | 29 languages: English, Spanish, French, German, Italian, Portuguese, Japanese, Chinese, Korean, Hindi, Arabic, Russian, and more | Best quality for most videos |
-| `eleven_flash_v2_5` | 32 languages: all of the above **plus Vietnamese, Hungarian, Norwegian** | Faster and cheaper |
+| `eleven_flash_v2_5` | 32 languages: all of the above plus a few more | Faster and cheaper |
 | `eleven_v3` | 70+ languages | Most expressive. Check your plan supports it |
 
 The full, current list of languages for each model: https://elevenlabs.io/docs/models
 
-**Example — Vietnamese:** `eleven_multilingual_v2` does not support Vietnamese. Use `eleven_flash_v2_5` or `eleven_v3`.
+**If your language is missing from `eleven_multilingual_v2`,** check the list above and use `eleven_flash_v2_5` or `eleven_v3`.
 
 ### Step 3 — Pick a voice with the right accent
 
@@ -168,7 +168,7 @@ If you see error `402 paid_plan_required`, pick a `premade` voice or upgrade.
 - Transcript language code: es
 ```
 
-Use the ISO code: `en`, `es`, `fr`, `de`, `pt`, `ja`, `zh`, `ko`, `vi`, ...
+Use the ISO code: `en`, `es`, `fr`, `de`, `pt`, `ja`, `zh`, `ko`, ...
 Empty means auto-detect. Setting it gives more accurate word timestamps and captions.
 
 ### Step 5 — Show the website in the same language (optional)
