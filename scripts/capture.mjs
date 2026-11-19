@@ -6,6 +6,7 @@
 import { chromium } from 'playwright';
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync, renameSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
+import { briefSetting } from './brief.mjs';
 
 const args = process.argv.slice(2);
 const arg = (name, def) => {
@@ -26,6 +27,7 @@ const browser = await chromium.launch({ headless: !headed });
 const context = await browser.newContext({
   viewport: { width: W, height: H },
   deviceScaleFactor: 1,
+  locale: briefSetting('Browser UI language', 'en-US'),
   recordVideo: { dir: 'capture/raw/tmp', size: { width: W, height: H } },
   storageState: existsSync(AUTH) ? AUTH : undefined,
 });

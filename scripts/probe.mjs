@@ -7,6 +7,7 @@
 
 import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
+import { briefSetting } from './brief.mjs';
 
 const argv = process.argv.slice(2);
 const url = argv.shift();
@@ -28,6 +29,7 @@ const AUTH = 'capture/.auth/state.json';
 const browser = await chromium.launch();
 const context = await browser.newContext({
   viewport: { width: W, height: H },
+  locale: briefSetting('Browser UI language', 'en-US'),
   storageState: existsSync(AUTH) ? AUTH : undefined,
 });
 const page = await context.newPage();

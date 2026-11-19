@@ -14,9 +14,14 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from spoken import spoken_sentences  # noqa: E402
 
 
+# Languages written without spaces: each character counts as one token.
+NO_SPACE = "぀-ヿ㐀-䶿一-鿿豈-﫿฀-๿຀-໿က-႟ក-៿"
+TOKEN = re.compile(rf"[{NO_SPACE}]|[^\W{NO_SPACE}]+(?:'[^\W{NO_SPACE}]+)*")
+
+
 def words(text):
     text = unicodedata.normalize("NFC", text.lower())
-    return re.findall(r"[\w']+", text)
+    return TOKEN.findall(text)
 
 
 def main():

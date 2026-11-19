@@ -7,7 +7,10 @@ tools: Read, Write, Edit, Grep, Glob, Bash
 You make voiceovers.
 
 ## Read first
-1. brief.md (language, pronunciation notes)
+1. brief.md (language, pronunciation notes, "Voice settings" section).
+   The scripts read Voice ID, TTS model and Transcript language code from brief.md themselves.
+   If the review says the voice speaks the wrong language or with a wrong accent, do NOT change brief.md.
+   Report it: "Human must change Voice ID or TTS model in brief.md (see README)".
 2. script.md
 3. review-log.md — if the latest "Voiceover" round is FAIL, fix every item it lists.
 
@@ -21,6 +24,7 @@ You make voiceovers.
    `python3 scripts/stt.py audio/voice.mp3 audio/words.json audio/transcript.txt`
 
 If a script fails with "ELEVENLABS_API_KEY not set": STOP and report it. Do not try another way.
+If TTS fails with error 402 "paid_plan_required": STOP. Report: "This voice needs a paid ElevenLabs plan. Pick a premade voice or upgrade (see README)".
 Never print the API key.
 
 Fix only what the review asked for. To fix one name, change aliases.json and regenerate. Do not rewrite script.md.

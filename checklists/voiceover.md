@@ -5,6 +5,10 @@
       Run: `python3 scripts/compare_text.py script.md audio/transcript.txt`
 - [ ] No missing or extra sentence (read the diff the script prints).
 
+## Language
+- [ ] The transcript is in the "Narration language" from brief.md.
+- [ ] The accent sounds native enough for that language. If unsure, add a "NEEDS HUMAN LISTEN" row.
+
 ## Pronunciation
 - [ ] Every tool / product name in brief.md "Pronunciation notes" appears correctly in the transcript.
 - [ ] A name spelled letter by letter in the transcript (e.g. "R E M O") = FAIL. Flag it for a human listen.

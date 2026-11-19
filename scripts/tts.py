@@ -4,8 +4,10 @@ Usage: python3 scripts/tts.py script.md audio/voice.mp3
 
 Env:
   ELEVENLABS_API_KEY    required (never printed)
-  ELEVENLABS_VOICE_ID   optional, default Xb7hH8MSUJpSbSDYk0k2 ("Alice", premade, works on free plan)
-  ELEVENLABS_TTS_MODEL  optional, default eleven_multilingual_v2
+
+Voice settings (brief.md line wins, then env var, then default):
+  brief.md "Voice ID"   / ELEVENLABS_VOICE_ID   default Xb7hH8MSUJpSbSDYk0k2 ("Alice", premade, works on free plan)
+  brief.md "TTS model"  / ELEVENLABS_TTS_MODEL  default eleven_multilingual_v2
 
 Optional audio/aliases.json: {"Remotion": "ree-MOH-shun"} — words swapped before TTS.
 """
@@ -19,7 +21,7 @@ import urllib.error
 import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from spoken import spoken_sentences  # noqa: E402
+from spoken import setting, spoken_sentences  # noqa: E402
 
 MAX_CHARS = 2500  # per request; keeps each call well under the API limit
 
@@ -64,8 +66,9 @@ def main():
     key = os.environ.get("ELEVENLABS_API_KEY")
     if not key:
         sys.exit("ELEVENLABS_API_KEY not set. Add it to ~/.zshrc and restart the Claude app.")
-    voice = os.environ.get("ELEVENLABS_VOICE_ID", "Xb7hH8MSUJpSbSDYk0k2")
-    model = os.environ.get("ELEVENLABS_TTS_MODEL", "eleven_multilingual_v2")
+    voice = setting("Voice ID", "ELEVENLABS_VOICE_ID", "Xb7hH8MSUJpSbSDYk0k2")
+    model = setting("TTS model", "ELEVENLABS_TTS_MODEL", "eleven_multilingual_v2")
+    print(f"voice={voice} model={model}")
 
     sentences = spoken_sentences(src)
     alias_path = os.path.join(os.path.dirname(dst) or ".", "aliases.json")

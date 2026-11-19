@@ -7,7 +7,9 @@ words.json = [{"text": "Click", "start": 0.12, "end": 0.40}, ...]  (seconds)
 Env:
   ELEVENLABS_API_KEY    required (never printed)
   ELEVENLABS_STT_MODEL  optional, default scribe_v1
-  ELEVENLABS_STT_LANG   optional ISO code, e.g. en or vi (default: auto-detect)
+
+Language (brief.md line wins, then env var, then auto-detect):
+  brief.md "Transcript language code" / ELEVENLABS_STT_LANG   ISO code, e.g. en, es, vi, ja
 """
 import json
 import mimetypes
@@ -16,6 +18,9 @@ import sys
 import urllib.error
 import urllib.request
 import uuid
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from spoken import setting  # noqa: E402
 
 
 def multipart(fields, file_field, file_path):
@@ -42,8 +47,9 @@ def main():
         sys.exit("ELEVENLABS_API_KEY not set. Add it to ~/.zshrc and restart the Claude app.")
     fields = {"model_id": os.environ.get("ELEVENLABS_STT_MODEL", "scribe_v1"),
               "timestamps_granularity": "word", "tag_audio_events": "false"}
-    if os.environ.get("ELEVENLABS_STT_LANG"):
-        fields["language_code"] = os.environ["ELEVENLABS_STT_LANG"]
+    lang = setting("Transcript language code", "ELEVENLABS_STT_LANG")
+    if lang:
+        fields["language_code"] = lang
     body, ctype = multipart(fields, "file", audio)
     req = urllib.request.Request("https://api.elevenlabs.io/v1/speech-to-text", data=body,
                                  headers={"xi-api-key": key, "Content-Type": ctype,
