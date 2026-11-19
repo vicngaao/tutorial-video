@@ -18,7 +18,7 @@ A failed check goes back to the Maker. Maximum 3 rounds per stage, then a human 
 ### Cài đặt (1 lần)
 
 ```bash
-git clone <link-repo-này>
+git clone https://github.com/vicngaao/tutorial-video.git
 ```
 
 ```bash
@@ -65,7 +65,7 @@ Claude Code, Node.js, ffmpeg, Python 3, an ElevenLabs API key.
 
 ### Install
 ```bash
-git clone <this-repo-url>
+git clone https://github.com/vicngaao/tutorial-video.git
 ```
 ```bash
 cd tutorial-video && bash setup.sh
