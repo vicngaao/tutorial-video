@@ -1,0 +1,27 @@
+# Dependencies (installed by setup.sh)
+node_modules/
+render/remotion/
+.claude/skills/remotion-*/
+skills-lock.json
+
+# Secrets — never commit
+capture/.auth/
+.env
+
+# Per-video outputs
+/outline.md
+/script.md
+/shots.json
+capture/raw/*
+capture/shots/*
+capture/timeline.json
+audio/*
+render/*
+!capture/raw/.gitkeep
+!capture/shots/.gitkeep
+!audio/.gitkeep
+!render/.gitkeep
+
+# System junk
+.DS_Store
+__pycache__/
