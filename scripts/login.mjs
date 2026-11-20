@@ -11,9 +11,8 @@
 // Usage: node scripts/login.mjs <url>
 // Optional: CHROME_PATH=/path/to/chrome   (if Chrome is not in the usual place)
 
-import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import readline from 'node:readline/promises';
 import { AUTH_DIR, AUTH_STATE, PROFILE_DIR, chromeLaunchFlags } from './browser.mjs';
 
@@ -53,23 +52,59 @@ await rl.question('\nA normal Chrome window opened. Log in there.\n'
   + 'When you see the app, come back here and press Enter. Keep Chrome open until you see "Saved"... ');
 rl.close();
 
-let browser;
+// Talk to Chrome with plain DevTools commands. Playwright's connectOverCDP does not work
+// with Chrome 158+ ("Browser context management is not supported").
+let cdp;
 try {
-  browser = await chromium.connectOverCDP(`http://127.0.0.1:${PORT}`);
+  cdp = await connectCDP(PORT);
 } catch {
   console.error('Could not reach the Chrome window. Did you close it before pressing Enter? Run the command again.');
   chrome.kill();
   process.exit(1);
 }
+const { cookies } = await cdp.send('Storage.getCookies');
 mkdirSync(AUTH_DIR, { recursive: true });
-await browser.contexts()[0].storageState({ path: AUTH_STATE });
+writeFileSync(AUTH_STATE, JSON.stringify({ cookies: cookies.map(toPlaywrightCookie), origins: [] }, null, 2));
 
 // Close Chrome cleanly, so it writes the cookies to the profile on disk.
-const cdp = await browser.newBrowserCDPSession();
 await cdp.send('Browser.close').catch(() => {});
+cdp.close();
 await Promise.race([exited, new Promise((r) => setTimeout(r, 10000))]);
 if (chrome.exitCode === null) chrome.kill();
 
 console.log(`Saved. Login profile: ${PROFILE_DIR}`);
 console.log(`Saved. Session copy:  ${AUTH_STATE}`);
 console.log('Capture and probe now use this login. Run this command again if a site logs you out.');
+
+// A tiny DevTools (CDP) client: one WebSocket to the browser, send(method) returns the result.
+async function connectCDP(port) {
+  const { webSocketDebuggerUrl } = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json();
+  const ws = new WebSocket(webSocketDebuggerUrl);
+  await new Promise((ok, fail) => { ws.onopen = ok; ws.onerror = () => fail(new Error('CDP connection failed')); });
+  let id = 0;
+  const waiting = new Map();
+  ws.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    const w = waiting.get(msg.id);
+    if (!w) return;
+    waiting.delete(msg.id);
+    msg.error ? w.fail(new Error(msg.error.message)) : w.ok(msg.result);
+  };
+  ws.onclose = () => { for (const w of waiting.values()) w.fail(new Error('Chrome closed')); waiting.clear(); };
+  return {
+    send: (method, params = {}) => new Promise((ok, fail) => {
+      waiting.set(++id, { ok, fail });
+      ws.send(JSON.stringify({ id, method, params }));
+    }),
+    close: () => ws.close(),
+  };
+}
+
+// Chrome cookie -> the cookie format Playwright reads from state.json.
+function toPlaywrightCookie(c) {
+  return {
+    name: c.name, value: c.value, domain: c.domain, path: c.path,
+    expires: c.session ? -1 : c.expires, httpOnly: c.httpOnly, secure: c.secure,
+    sameSite: ['Strict', 'Lax', 'None'].includes(c.sameSite) ? c.sameSite : 'Lax',
+  };
+}
