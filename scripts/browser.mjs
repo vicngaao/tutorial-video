@@ -7,11 +7,14 @@
 import { chromium } from 'playwright';
 import { cpSync, existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { basename, join, resolve } from 'node:path';
+import { basename, dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-export const AUTH_DIR = 'capture/.auth';
-export const AUTH_STATE = `${AUTH_DIR}/state.json`;
-export const PROFILE_DIR = resolve(`${AUTH_DIR}/chrome-profile`);
+// The login is shared by all videos, so it lives at the project root (not in a video folder).
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+export const AUTH_DIR = join(ROOT, 'capture/.auth');
+export const AUTH_STATE = join(AUTH_DIR, 'state.json');
+export const PROFILE_DIR = join(AUTH_DIR, 'chrome-profile');
 
 // login.mjs starts Chrome with the same cookie storage as the Chrome that Playwright starts.
 // Without this, capture cannot read the cookies (on macOS they are locked to the Keychain).

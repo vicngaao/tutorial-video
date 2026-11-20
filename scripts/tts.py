@@ -1,6 +1,6 @@
 """Stage 4: script.md -> audio/voice.mp3 with ElevenLabs Text-to-Speech.
 
-Usage: python3 scripts/tts.py script.md audio/voice.mp3
+Usage: python3 ../../scripts/tts.py script.md audio/voice.mp3
 
 Env:
   ELEVENLABS_API_KEY    required (never printed)

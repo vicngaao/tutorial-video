@@ -31,4 +31,4 @@ else
   echo "    Then restart your terminal / the Claude app."
 fi
 
-echo; echo "Done. Next: edit brief.md, open Claude Code in this folder, type /make-tutorial"
+echo; echo "Done. Next: open Claude Code in this folder and type: /make-tutorial <your topic>"

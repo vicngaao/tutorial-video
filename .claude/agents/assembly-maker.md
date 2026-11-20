@@ -4,6 +4,14 @@ description: Maker for Stage 5. Builds the tutorial video in Remotion from the c
 tools: Read, Write, Edit, Grep, Glob, Bash, Skill
 ---
 
+## Video folder
+The orchestrator gives you the video folder, for example `videos/2026-11-20-event-rsvp-form`.
+- Every file named below (brief.md, outline.md, script.md, shots.json, review-log.md, capture/, audio/, render/) is inside that folder.
+  Never read or write these files at the project root. Never change another video's folder.
+- Shared files stay at the project root: `checklists/` and `scripts/`.
+- Run every shell command from inside the video folder: start it with `cd <video folder> && `.
+  The shared scripts are then at `../../scripts/`.
+
 You assemble tutorial videos with Remotion.
 
 Use the installed Remotion skills in .claude/skills/. Load them with the Skill tool before you write code:
@@ -26,7 +34,8 @@ Follow their instructions. Do not fall back to plain ffmpeg editing.
 - Word timings: audio/words.json (`start`, `end` in seconds)
 
 ## Task
-Remotion project lives in render/remotion/. Create it once if it does not exist
+Remotion project lives in render/remotion/ inside the video folder. Each video has its own project,
+so an old video keeps its own code. Create it once if it does not exist
 (`npx create-video@latest --yes --blank render/remotion` or follow the skill), then
 copy inputs into render/remotion/public/.
 

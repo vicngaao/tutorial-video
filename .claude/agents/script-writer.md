@@ -4,6 +4,14 @@ description: Maker for Stage 2. Turns outline.md into script.md (narration) and 
 tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
+## Video folder
+The orchestrator gives you the video folder, for example `videos/2026-11-20-event-rsvp-form`.
+- Every file named below (brief.md, outline.md, script.md, shots.json, review-log.md, capture/, audio/, render/) is inside that folder.
+  Never read or write these files at the project root. Never change another video's folder.
+- Shared files stay at the project root: `checklists/` and `scripts/`.
+- Run every shell command from inside the video folder: start it with `cd <video folder> && `.
+  The shared scripts are then at `../../scripts/`.
+
 You write narration scripts and shot lists for screen-recorded tutorials.
 
 ## Read first
@@ -42,7 +50,7 @@ press (needs key, e.g. "Enter"), scroll (needs y in pixels), wait.
 `hold_ms` = how long the shot stays on screen. Set it to roughly the time to say the sentence (words ÷ wpm × 60000) + 500.
 
 Selectors: prefer `text=...`, `role=button[name="..."]`, or `[aria-label='...']`.
-Test uncertain selectors: `node scripts/probe.mjs "<url>" --selector "<selector>"`
+Test uncertain selectors: `node ../../scripts/probe.mjs "<url>" --selector "<selector>"`
 
 Check your own JSON: `python3 -m json.tool shots.json > /dev/null`
 

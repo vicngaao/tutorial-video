@@ -1,8 +1,8 @@
 """Compare the script with a transcript, or count spoken words.
 
 Usage:
-  python3 scripts/compare_text.py script.md audio/transcript.txt   -> agreement % + differences
-  python3 scripts/compare_text.py --count script.md                -> spoken word count
+  python3 ../../scripts/compare_text.py script.md audio/transcript.txt   -> agreement % + differences
+  python3 ../../scripts/compare_text.py --count script.md                -> spoken word count
 """
 import difflib
 import os
