@@ -1,6 +1,7 @@
 # Brief
 
-Edit this file before each new video. Every agent reads it.
+Settings for this video. Every agent reads it.
+(This is the template. `node scripts/new-video.mjs` copies it into each new video folder.)
 
 - Topic: Create an Event RSVP Form
 - Tool: Google Forms (current web version)

@@ -6,7 +6,7 @@ One AI agent makes each part of the video. A second, independent AI agent checks
 If the check fails, the work goes back for a fix. After 3 failed rounds, the loop stops and asks you.
 
 ```
-brief.md → 1 Outline → 2 Script + Shots → 3 Screen Capture → 4 Voiceover → 5 Assembly → 6 Final Review → render/final.mp4
+brief.md → 1 Outline → 2 Script + Shots → 3 Screen Capture → 4 Voiceover → 5 Assembly → 6 Final Review → final.mp4
               ▲ you approve                  (Playwright)       (ElevenLabs)   (Remotion)        ▲ you watch
 ```
 
@@ -58,9 +58,21 @@ echo 'export ELEVENLABS_API_KEY=your_key_here' >> ~/.zshrc
 
 ## 3. Make a video
 
-### Step 1 — Edit `brief.md`
+### Every video gets its own folder
 
-Change these lines for your video:
+Each video is made in its own folder: `videos/<date>-<topic>/`, for example `videos/2026-11-20-create-an-event-rsvp-form/`.
+That folder holds everything of that video: `brief.md`, `outline.md`, `script.md`, `shots.json`, `review-log.md`, `capture/`, `audio/` and `render/` (with `final.mp4`).
+When you make a new video, the old folders stay as they are. Nothing is deleted.
+
+`/make-tutorial <topic>` makes the folder for you. To make one by hand:
+
+```bash
+node scripts/new-video.mjs "Create an Event RSVP Form"
+```
+
+### Step 1 — Edit the video's `brief.md`
+
+Open `videos/<your video>/brief.md`. New folders start from `templates/brief.md`. Change these lines for your video:
 
 | Line | Example |
 |---|---|
@@ -107,15 +119,22 @@ Or give the topic directly:
 
 You are asked twice:
 1. **After the outline** — approve the steps or ask for changes.
-2. **At the end** — watch `render/final.mp4` once for pacing and tone.
+2. **At the end** — watch `videos/<your video>/render/final.mp4` once for pacing and tone.
 
-Every error and every fix is written to `review-log.md`.
+Every error and every fix is written to the video's own `review-log.md`.
+
+To continue an unfinished video, type `/make-tutorial` (it resumes the newest unfinished one) or name the folder:
+
+```
+/make-tutorial videos/2026-11-20-create-an-event-rsvp-form
+```
 
 ---
 
 ## 4. Change the narration language
 
-You can make videos in other languages. All settings are in `brief.md`. You do not need to edit any code.
+You can make videos in other languages. All settings are in the video's `brief.md`. You do not need to edit any code.
+To use the same settings for every new video, change `templates/brief.md`.
 
 ### Step 1 — Set the language
 
@@ -217,11 +236,12 @@ For Chinese, Japanese and Thai (no spaces between words), the checks count **cha
 
 | Path | What it does |
 |---|---|
-| `brief.md` | Your video settings. Every agent reads it |
+| `videos/<date>-<topic>/` | One folder per video: its brief, outline, script, capture, audio, render and review log |
+| `templates/` | `brief.md` and `review-log.md` that each new video folder starts from |
+| `scripts/new-video.mjs` | Makes a new video folder |
 | `.claude/skills/make-tutorial/` | The orchestrator: runs the stages, the 3-round limit, 2 human checkpoints |
 | `.claude/agents/` | 11 agents: 5 makers, 5 checkers, 1 final reviewer |
 | `checklists/` | The pass/fail checklist for each stage |
-| `review-log.md` | Every check result and fix |
 | `scripts/capture.mjs` | Runs `shots.json` in Playwright. Records video, screenshots, timeline |
 | `scripts/probe.mjs` | Checks that buttons and labels exist on a live page |
 | `scripts/login.mjs` | You log in by hand in a normal Chrome. Saves the login for capture |
@@ -231,7 +251,7 @@ For Chinese, Japanese and Thai (no spaces between words), the checks count **cha
 | `scripts/compare_text.py` | Script vs transcript agreement %, word count |
 | `setup.sh` | Installs Playwright, Chromium, Remotion skills |
 
-Output files of each video (`outline.md`, `script.md`, `shots.json`, `capture/`, `audio/`, `render/`) are git-ignored.
+The `videos/` folders are git-ignored (video files are big). They stay on your computer.
 
 Remotion skills come from [remotion-dev/skills](https://github.com/remotion-dev/skills). Remotion has its own [license](https://www.remotion.dev/license): free for individuals and small companies.
 

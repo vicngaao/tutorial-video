@@ -6,7 +6,7 @@
 
 ## Timing
 - [ ] Spoken word count ≈ (video minutes × words per minute from brief.md), ±10%.
-      Count with: `python3 scripts/compare_text.py --count script.md`
+      Count with: `python3 ../../scripts/compare_text.py --count script.md`
 - [ ] Sum of `hold_ms` in shots.json is within ±10% of the target video length.
 
 ## Mapping

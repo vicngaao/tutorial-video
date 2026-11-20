@@ -1,9 +1,10 @@
 // Stage 3: run shots.json in a real browser, record it, save a screenshot per shot,
 // and write capture/timeline.json (start/end time + element box for each shot).
 //
-// Usage: node scripts/capture.mjs --shots shots.json --size 1920x1080 [--headed]
+// Run it INSIDE the video folder. All paths are relative to that folder.
+// Usage: cd videos/<name> && node ../../scripts/capture.mjs --shots shots.json --size 1920x1080 [--headed]
 
-import { readFileSync, writeFileSync, mkdirSync, rmSync, renameSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync, rmSync, renameSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { briefSetting } from './brief.mjs';
 import { openBrowser } from './browser.mjs';
@@ -17,6 +18,11 @@ const shotsPath = arg('--shots', 'shots.json');
 const [W, H] = arg('--size', '1920x1080').split('x').map(Number);
 const headed = args.includes('--headed');
 
+if (!existsSync('brief.md') || !existsSync(shotsPath)) {
+  console.error(`No brief.md or ${shotsPath} here (${process.cwd()}).`);
+  console.error('Run this inside a video folder: cd videos/<name> && node ../../scripts/capture.mjs ...');
+  process.exit(2);
+}
 const shots = JSON.parse(readFileSync(shotsPath, 'utf8'));
 mkdirSync('capture/shots', { recursive: true });
 rmSync('capture/raw/tmp', { recursive: true, force: true });

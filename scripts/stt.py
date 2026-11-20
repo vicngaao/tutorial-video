@@ -1,6 +1,6 @@
 """Audio -> word timestamps + transcript with ElevenLabs Scribe (speech-to-text).
 
-Usage: python3 scripts/stt.py audio/voice.mp3 audio/words.json audio/transcript.txt
+Usage: python3 ../../scripts/stt.py audio/voice.mp3 audio/words.json audio/transcript.txt
 
 words.json = [{"text": "Click", "start": 0.12, "end": 0.40}, ...]  (seconds)
 

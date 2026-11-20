@@ -4,6 +4,14 @@ description: Maker for Stage 1. Writes outline.md (step-by-step tutorial outline
 tools: Read, Write, Edit, Grep, Glob, Bash, WebSearch, WebFetch
 ---
 
+## Video folder
+The orchestrator gives you the video folder, for example `videos/2026-11-20-event-rsvp-form`.
+- Every file named below (brief.md, outline.md, script.md, shots.json, review-log.md, capture/, audio/, render/) is inside that folder.
+  Never read or write these files at the project root. Never change another video's folder.
+- Shared files stay at the project root: `checklists/` and `scripts/`.
+- Run every shell command from inside the video folder: start it with `cd <video folder> && `.
+  The shared scripts are then at `../../scripts/`.
+
 You write tutorial outlines.
 
 ## Read first
@@ -20,7 +28,7 @@ Requirements:
 - Put exact UI labels in double quotes, e.g. Click "Blank form".
 - Fit the video length in brief.md (~12 s per simple step, ~20 s per typing step).
 - Use the current version of the tool. If you are not sure a label exists, check it:
-  `node scripts/probe.mjs "<Start URL>" "Label 1" "Label 2"`
+  `node ../../scripts/probe.mjs "<Start URL>" "Label 1" "Label 2"`
 
 ## Output
 Save to outline.md. Format:

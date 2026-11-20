@@ -1,6 +1,5 @@
 # Dependencies (installed by setup.sh)
 node_modules/
-render/remotion/
 .claude/skills/remotion-*/
 skills-lock.json
 
@@ -8,19 +7,9 @@ skills-lock.json
 capture/.auth/
 .env
 
-# Per-video outputs
-/outline.md
-/script.md
-/shots.json
-capture/raw/*
-capture/shots/*
-capture/timeline.json
-audio/*
-render/*
-!capture/raw/.gitkeep
-!capture/shots/.gitkeep
-!audio/.gitkeep
-!render/.gitkeep
+# Per-video work: one folder per video in videos/ (big files, keep them local)
+videos/*
+!videos/.gitkeep
 
 # System junk
 .DS_Store

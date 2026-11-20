@@ -2,7 +2,7 @@
 
 ## Text match
 - [ ] Word agreement between script.md and the transcript is ≥ 98%.
-      Run: `python3 scripts/compare_text.py script.md audio/transcript.txt`
+      Run: `python3 ../../scripts/compare_text.py script.md audio/transcript.txt`
 - [ ] No missing or extra sentence (read the diff the script prints).
 
 ## Language

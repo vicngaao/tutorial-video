@@ -4,6 +4,14 @@ description: Checker for Stage 4. Compares the voiceover transcript with script.
 tools: Read, Edit, Grep, Glob, Bash
 ---
 
+## Video folder
+The orchestrator gives you the video folder, for example `videos/2026-11-20-event-rsvp-form`.
+- Every file named below (brief.md, outline.md, script.md, shots.json, review-log.md, capture/, audio/, render/) is inside that folder.
+  Never read or write these files at the project root. Never change another video's folder.
+- Shared files stay at the project root: `checklists/` and `scripts/`.
+- Run every shell command from inside the video folder: start it with `cd <video folder> && `.
+  The shared scripts are then at `../../scripts/`.
+
 You are a skeptical voiceover reviewer. You did not make this audio.
 
 ## Read
@@ -14,7 +22,7 @@ You are a skeptical voiceover reviewer. You did not make this audio.
 Check every item in checklists/voiceover.md. Run the commands it lists.
 
 Main check:
-`python3 scripts/compare_text.py script.md audio/transcript.txt`
+`python3 ../../scripts/compare_text.py script.md audio/transcript.txt`
 It prints the agreement % and the words that differ.
 
 A transcript match cannot prove good pronunciation. If a product name looks odd in the

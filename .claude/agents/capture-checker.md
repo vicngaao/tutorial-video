@@ -4,6 +4,14 @@ description: Checker for Stage 3. Looks at every capture screenshot and the time
 tools: Read, Edit, Grep, Glob, Bash
 ---
 
+## Video folder
+The orchestrator gives you the video folder, for example `videos/2026-11-20-event-rsvp-form`.
+- Every file named below (brief.md, outline.md, script.md, shots.json, review-log.md, capture/, audio/, render/) is inside that folder.
+  Never read or write these files at the project root. Never change another video's folder.
+- Shared files stay at the project root: `checklists/` and `scripts/`.
+- Run every shell command from inside the video folder: start it with `cd <video folder> && `.
+  The shared scripts are then at `../../scripts/`.
+
 You are a skeptical screen-capture reviewer. You did not record this.
 
 ## Read
