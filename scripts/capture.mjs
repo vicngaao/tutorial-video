@@ -3,10 +3,10 @@
 //
 // Usage: node scripts/capture.mjs --shots shots.json --size 1920x1080 [--headed]
 
-import { chromium } from 'playwright';
-import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync, renameSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, renameSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { briefSetting } from './brief.mjs';
+import { openBrowser } from './browser.mjs';
 
 const args = process.argv.slice(2);
 const arg = (name, def) => {
@@ -16,22 +16,20 @@ const arg = (name, def) => {
 const shotsPath = arg('--shots', 'shots.json');
 const [W, H] = arg('--size', '1920x1080').split('x').map(Number);
 const headed = args.includes('--headed');
-const AUTH = 'capture/.auth/state.json';
 
 const shots = JSON.parse(readFileSync(shotsPath, 'utf8'));
 mkdirSync('capture/shots', { recursive: true });
 rmSync('capture/raw/tmp', { recursive: true, force: true });
 mkdirSync('capture/raw/tmp', { recursive: true });
 
-const browser = await chromium.launch({ headless: !headed });
-const context = await browser.newContext({
+const { context, page, mode, close } = await openBrowser({
+  headless: !headed,
   viewport: { width: W, height: H },
   deviceScaleFactor: 1,
   locale: briefSetting('Browser UI language', 'en-US'),
   recordVideo: { dir: 'capture/raw/tmp', size: { width: W, height: H } },
-  storageState: existsSync(AUTH) ? AUTH : undefined,
 });
-const page = await context.newPage();
+console.log(`Browser: ${mode}`);
 const t0 = Date.now();
 const now = () => Date.now() - t0;
 const timeline = [];
@@ -100,8 +98,7 @@ for (const s of shots) {
 writeFileSync('capture/timeline.json', JSON.stringify({ size: { width: W, height: H }, shots: timeline }, null, 2));
 
 const video = page.video();
-await context.close(); // the video file is written only after the context closes
-await browser.close();
+await close(); // the video file is written only after the context closes
 const webm = await video.path();
 renameSync(webm, 'capture/raw/recording.webm');
 rmSync('capture/raw/tmp', { recursive: true, force: true });

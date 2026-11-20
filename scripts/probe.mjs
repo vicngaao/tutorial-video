@@ -5,9 +5,8 @@
 //   node scripts/probe.mjs <url> --selector "text=Blank form" --selector "[aria-label='Form title']"
 //   add --size 1080x1920 to use another viewport
 
-import { chromium } from 'playwright';
-import { existsSync } from 'node:fs';
 import { briefSetting } from './brief.mjs';
+import { openBrowser } from './browser.mjs';
 
 const argv = process.argv.slice(2);
 const url = argv.shift();
@@ -24,15 +23,10 @@ for (let i = 0; i < argv.length; i++) {
   else labels.push(argv[i]);
 }
 const [W, H] = size.split('x').map(Number);
-const AUTH = 'capture/.auth/state.json';
-
-const browser = await chromium.launch();
-const context = await browser.newContext({
+const { page, mode, close } = await openBrowser({
   viewport: { width: W, height: H },
   locale: briefSetting('Browser UI language', 'en-US'),
-  storageState: existsSync(AUTH) ? AUTH : undefined,
 });
-const page = await context.newPage();
 await page.goto(url, { waitUntil: 'domcontentloaded' });
 await page.waitForLoadState('networkidle', { timeout: 8000 }).catch(() => {});
 
@@ -40,7 +34,7 @@ const visible = async (loc) => {
   try { await loc.first().waitFor({ state: 'visible', timeout: 4000 }); return true; } catch { return false; }
 };
 
-const result = { url, final_url: page.url(), title: await page.title(), logged_in_session: existsSync(AUTH), labels: {}, selectors: {} };
+const result = { url, final_url: page.url(), title: await page.title(), login: mode, labels: {}, selectors: {} };
 for (const l of labels) {
   result.labels[l] = (await visible(page.getByText(l, { exact: true }))) ? 'found (exact)'
     : (await visible(page.getByText(l))) ? 'found (partial match only)'
@@ -54,4 +48,4 @@ if (/accounts\.google\.com|login|signin|sign-in/i.test(result.final_url)) {
   result.note = 'Redirected to a login page. Labels behind login cannot be checked. Human must run: node scripts/login.mjs <url>';
 }
 console.log(JSON.stringify(result, null, 2));
-await browser.close();
+await close();
