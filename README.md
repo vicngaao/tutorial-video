@@ -83,10 +83,13 @@ The agents never type passwords. You log in once by hand:
 node scripts/login.mjs https://docs.google.com/forms/
 ```
 
-A browser window opens. Log in. Go back to the terminal and press Enter.
-The session is saved in `capture/.auth/`. This folder is git-ignored. Do not share it.
+A normal Chrome window opens. Log in. Go back to the terminal and press Enter. Keep Chrome open until the terminal says "Saved". The script closes Chrome for you.
 
-Some sites (Google included) can block logins in automated browsers. If that happens, use a separate test account or record that part by hand.
+- The window is a normal Chrome, not an automated one. So Google sign-in works, and "Sign in with Google" on other sites (for example ElevenLabs) works too.
+- Your login is saved in `capture/.auth/chrome-profile` (plus a copy in `capture/.auth/state.json`). This folder is git-ignored. Do not share it.
+- Capture and probe then open Chrome with a fresh copy of that profile. You stay logged in, and each run starts clean: nothing from one run is kept for the next.
+- You need Google Chrome installed. Without it, capture uses Playwright's Chromium with `state.json`, and Google may log you out.
+- If a site logs you out later, run the login command again.
 
 ### Step 3 — Run
 
@@ -221,7 +224,8 @@ For Chinese, Japanese and Thai (no spaces between words), the checks count **cha
 | `review-log.md` | Every check result and fix |
 | `scripts/capture.mjs` | Runs `shots.json` in Playwright. Records video, screenshots, timeline |
 | `scripts/probe.mjs` | Checks that buttons and labels exist on a live page |
-| `scripts/login.mjs` | You log in by hand. Saves the session for capture |
+| `scripts/login.mjs` | You log in by hand in a normal Chrome. Saves the login for capture |
+| `scripts/browser.mjs` | Opens the browser for capture and probe, with your login if you made one |
 | `scripts/tts.py` | ElevenLabs text-to-speech |
 | `scripts/stt.py` | ElevenLabs Scribe: transcript + word timestamps |
 | `scripts/compare_text.py` | Script vs transcript agreement %, word count |

@@ -18,7 +18,8 @@ Check every item in checklists/outline.md.
 Verify UI labels against the live app:
 `node scripts/probe.mjs "<Start URL from brief.md>" "Label 1" "Label 2" ...`
 The script prints found / not found for each label.
-If the page needs a login and capture/.auth/state.json does not exist, mark those labels "NEEDS MANUAL CHECK".
+The output field "login" says which login probe used ("chrome-profile", "state.json" or "no-login").
+If the page needs a login and "login" is "no-login" (or the page still redirects to a login page), mark those labels "NEEDS MANUAL CHECK".
 A label you could not verify is never a PASS.
 
 ## Report
